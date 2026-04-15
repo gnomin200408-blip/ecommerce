@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Header } from "./components/Header";
-import { Navigation } from "./components/Navigation";
+// import { Navigation } from "./components/Navigation";
 import { Product, ProductApiResponse } from "./types";
 import { Card } from "./components/Card";
 
@@ -15,27 +15,28 @@ export default function Home() {
   const [skip, setSkip] = useState(0);
   const [total, setTotal] = useState(0);
   const [search, setSearch] = useState("");
-  const [activeTab, setActiveTab] = useState("All");
+  const [activeTab, setActiveTab] = useState(false);
   // const filteredProducts = products.filter((product) => {
   //   if (activeTab === Categories) return product.category;
   // });
-
+  const handleClick = () => {
+    setActiveTab((prev) => !prev);
+  };
   const Categories = [
     { name: "All", label: "all" },
-    { name: "Fragrances", label: "Fragrances" },
-    { name: "Furniture", label: "Furniture" },
-    { name: "Groceries", label: "Groceries" },
-    { name: "Home Decoration", label: "Home Decoration" },
-    { name: "Kitchen Accessories", label: "Kitchen Accessories" },
-    { name: "Labtops", label: "Labtops" },
-    { name: "Smartphones", label: "Smartphones" },
-    { name: "Sport Accessories", label: "Sport Accessories" },
+    { name: "Fragrances", label: "fragrances" },
+    { name: "Furniture", label: "furniture" },
+    { name: "Groceries", label: "groceries" },
+    { name: "Home Decoration", label: "gome Decoration" },
+    { name: "Kitchen Accessories", label: "kitchen Accessories" },
+    { name: "Labtops", label: "labtops" },
+    { name: "Smartphones", label: "smartphones" },
+    { name: "Sport Accessories", label: "sport Accessories" },
   ];
   useEffect(() => {
     let url = `https://dummyjson.com/products?limit=${PRODUCTS_PER_PAGE}&skip=${skip}`;
     if (search) {
-      if (ac)
-        url = `https://dummyjson.com/products/search?q=${search}&limit=${PRODUCTS_PER_PAGE}&skip=${skip}`;
+      url = `https://dummyjson.com/products/search?q=${search}&limit=${PRODUCTS_PER_PAGE}&skip=${skip}`;
     }
     fetch(url)
       .then((res) => {
@@ -88,11 +89,7 @@ export default function Home() {
       <nav className="border-b border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
         <div className="mx-auto max-w-7xl px-6">
           <ul className="flex gap-1 overflow-x-auto py-3 no-scrollbar">
-            <div>
-              {Categories.map((cat) => {
-                <Navigation category={cat.label} onClick={onClick}  />;
-              })}
-            </div>
+            <div>{/* <Navigation /> */}</div>
 
             {/* <li>
               <button className="rounded-full px-4 py-1.5 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800">
