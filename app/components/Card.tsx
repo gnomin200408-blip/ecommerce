@@ -24,7 +24,10 @@ export const Card = ({ product }: { product: Product }) => {
             {product.title}
           </h2>
           <span className="shrink-0 rounded-lg bg-emerald-50 px-2.5 py-1 text-sm font-bold text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
-            {product.price}
+            {(
+              product.price -
+              (product.price * product.discountPercentage) / 100
+            ).toFixed(2)}
           </span>
         </div>
         <p className="mb-3 line-clamp-2 text-sm leading-relaxed text-zinc-500 dark:text-zinc-400">

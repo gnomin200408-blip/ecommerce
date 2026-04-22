@@ -1,42 +1,36 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Header } from "./components/Header";
-import { Product, ProductApiResponse } from "./types";
-import { Card } from "./components/Card";
-import { Navigation } from "./components/Navigation";
-import { Pagination } from "./components/Pagination";
-import { Footer } from "./components/Footer";
+import { Header } from "@/app/components/Header";
+import { Product } from "@/app/types";
+import { Card } from "@/app/components/Card";
+import { Navigation } from "@/app/components/Navigation";
+import { Pagination } from "@/app/components/Pagination";
+import { Footer } from "@/app/components/Footer";
+import { useParams } from "next/navigation";
 
 const PRODUCTS_PER_PAGE = 10;
 
 export default function Home() {
+  const { slug } = useParams();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+
   const [skip, setSkip] = useState(0);
   const [total, setTotal] = useState(0);
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    let url = `https://dummyjson.com/products?limit=${PRODUCTS_PER_PAGE}&skip=${skip}`;
-    if (search) {
-      url = `https://dummyjson.com/products/search?q=${search}&limit=${PRODUCTS_PER_PAGE}&skip=${skip}`;
-    }
+    const url = `https://dummyjson.com/products/category/${slug}?limit=${PRODUCTS_PER_PAGE}&skip=${skip}`;
+
     fetch(url)
-      .then((res) => {
-        return res.json();
-      })
-      .then((data: ProductApiResponse) => {
+      .then((res) => res.json())
+      .then((data) => {
         setProducts(data.products);
         setTotal(data.total);
-        setSkip(data.skip);
         setLoading(false);
-      })
-      .catch(() => {
-        setError("aldaa garlaa");
       });
-  }, [skip, search]);
+  }, [skip]);
 
   const totalPages = Math.ceil(total / PRODUCTS_PER_PAGE);
   const currentPage = Math.ceil(skip / PRODUCTS_PER_PAGE + 1);
@@ -46,6 +40,10 @@ export default function Home() {
   const handleNext = () => {
     return setSkip(skip + PRODUCTS_PER_PAGE);
   };
+
+  if (loading) {
+    return <div className="w-full py-20 text-center text-2xl">Loading...</div>;
+  }
 
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
@@ -58,6 +56,7 @@ export default function Home() {
       <main className="mx-auto max-w-7xl px-6 py-10">
         {/* Search */}
         <div className="mb-8">
+          {/* TODO: value={search} onChange={handleSearch} холбох */}
           <input
             value={search}
             onChange={(e) => {
@@ -70,9 +69,11 @@ export default function Home() {
         </div>
 
         <p className="mb-6 text-sm text-zinc-500 dark:text-zinc-400">
+          {/* TODO 12: Бүтээгдэхүүний тоо харуулах */}
           {total} products found
         </p>
 
+        {/* TODO 13: Доорх hardcode-г products.map() ашиглан солих */}
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {/* Card 1 */}
           {products.map((product) => (

@@ -49,3 +49,19 @@ export type ProductApiResponse = {
   skip: number;
   limit: number;
 };
+export type ProductCategory = {
+  slug: string;
+  name: string;
+  url: string;
+};
+export type User = {
+  accessToken: string;
+  email: string;
+  firstName: string;
+  gender: string;
+  id: number;
+  image: string;
+  lastName: string;
+  refreshToken: string;
+  username: string;
+};

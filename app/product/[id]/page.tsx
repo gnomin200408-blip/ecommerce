@@ -18,13 +18,45 @@ import { useEffect, useState } from "react";
 export default function ProductDetail() {
   const { id } = useParams();
   const [product, setProduct] = useState<Product | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [image, setImage] = useState("");
+
   useEffect(() => {
+    let statusCode = 200;
     fetch(`https://dummyjson.com/products/${id}`)
-      .then((res) => res.json())
+      .then((res) => {
+        if (res.status !== 200) {
+          statusCode = res.status;
+        }
+        return res.json();
+      })
       .then((data) => {
-        setProduct(data);
+        if (statusCode == 200) {
+          setProduct(data);
+          setImage(data.thumbnail);
+        } else {
+          setError(data.message);
+        }
+        setLoading(false);
       });
-  }, []);
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-white dark:bg-zinc-950">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-zinc-300 border-t-zinc-900" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-white dark:bg-zinc-950">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-zinc-300 border-t-zinc-900" />
+      </div>
+    );
+  }
 
   if (!product) return null;
   // TODO 4: URL-ээс id параметр авах
@@ -77,7 +109,7 @@ export default function ProductDetail() {
           <div>
             <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
               <img
-                src={product.images[0]}
+                src={image}
                 alt={product.title}
                 className="h-96 w-full object-cover"
               />
@@ -88,6 +120,9 @@ export default function ProductDetail() {
             <div className="mt-4 grid grid-cols-4 gap-3">
               {product.images.map((image: string) => (
                 <button
+                  onClick={() => {
+                    setImage(image);
+                  }}
                   key={image}
                   className="overflow-hidden rounded-xl border-2 border-zinc-900 dark:border-zinc-100"
                 >
@@ -224,29 +259,32 @@ export default function ProductDetail() {
             {/* Stock Status */}
             {/* TODO 14: Үлдэгдлийн тоогоор өнгө өөрчлөх */}
             {/* stock > 50: emerald, stock > 10: amber, stock <= 10: red */}
-
-            <div className="mt-6 flex items-center gap-2">
-              <span
-                className={
-                  product.stock > 50
-                    ? "h-2.5 w-2.5 rounded-full bg-emerald-500"
-                    : product.stock > 10
-                      ? "h-2.5 w-2.5 rounded-full text-amber-400"
-                      : "h-2.5 w-2.5 rounded-full bg-red-500"
-                }
-              ></span>
-              <span
-                className={
-                  product.stock > 50
-                    ? "text-sm font-medium text-emerald-500"
-                    : product.stock > 10
-                      ? "text-sm font-medium text-amber-400"
-                      : "text-sm font-medium text-red-600 dark:text-red-400"
-                }
-              >
-                Бага үлдэгдэл — зөвхөн {product.stock}ширхэг
-              </span>
-            </div>
+            {product.stock > 50 ? (
+              <div className="mt-6 flex items-center gap-2">
+                <span
+                  className={"h-2.5 w-2.5 rounded-full bg-emerald-500"}
+                ></span>
+                <span className={"text-sm font-medium text-emerald-500"}>
+                  Хангалттай үлдэгдэл - {product.stock}ширхэг
+                </span>
+              </div>
+            ) : product.stock > 10 ? (
+              <div className="mt-6 flex items-center gap-2">
+                <span
+                  className={"h-2.5 w-2.5 rounded-full bg-amber-500"}
+                ></span>
+                <span className={"text-sm font-medium text-amber-500"}>
+                  Үлдэгдэл - {product.stock}ширхэг
+                </span>
+              </div>
+            ) : (
+              <div className="mt-6 flex items-center gap-2">
+                <span className={"h-2.5 w-2.5 rounded-full bg-red-500"}></span>
+                <span className={"text-sm font-medium text-red-500"}>
+                  Бага үлдэгдэл - {product.stock}ширхэг
+                </span>
+              </div>
+            )}
 
             {/* Reviews Section */}
             {/* TODO 15: product.reviews массивыг map-аар гүйлгэх */}
