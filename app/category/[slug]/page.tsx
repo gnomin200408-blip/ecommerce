@@ -30,16 +30,10 @@ export default function Home() {
         setTotal(data.total);
         setLoading(false);
       });
-  }, [skip]);
+  }, [skip, slug]);
 
   const totalPages = Math.ceil(total / PRODUCTS_PER_PAGE);
   const currentPage = Math.ceil(skip / PRODUCTS_PER_PAGE + 1);
-  const handlePrev = () => {
-    return setSkip(skip - PRODUCTS_PER_PAGE);
-  };
-  const handleNext = () => {
-    return setSkip(skip + PRODUCTS_PER_PAGE);
-  };
 
   if (loading) {
     return <div className="w-full py-20 text-center text-2xl">Loading...</div>;

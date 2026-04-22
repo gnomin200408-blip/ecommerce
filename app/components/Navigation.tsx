@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useState } from "react";
 import { ProductCategory } from "../types";
 import Link from "next/link";
