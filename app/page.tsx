@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Header } from "./components/Header";
 import { Product, ProductApiResponse } from "./types";
 import { Card } from "./components/Card";
 import { Navigation } from "./components/Navigation";
 import { Pagination } from "./components/Pagination";
 import { Footer } from "./components/Footer";
+import { UserContext } from "./providers/user-provider";
 
 const PRODUCTS_PER_PAGE = 10;
 

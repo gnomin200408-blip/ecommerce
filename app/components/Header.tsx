@@ -26,7 +26,7 @@ export const Header = () => {
             </Link>
           </div>
         ) : (
-          <div className="">Hi {user?.username}</div>
+          <div className="">Hi {user.username}</div>
         )}
       </div>
     </header>
